@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный Погодный Дашборд</title>
+    <!-- Подключаем современные иконки Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Подключаем стили -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Динамический фоновый оверлей для эффектов -->
+    <div class="bg-overlay" id="bgOverlay"></div>
+
+    <div class="dashboard-container">
+
+        
+        <header class="search-box">
+            <i class='bx bx-map-pin' id="geoBtn" title="Определить мое местоположение"></i>
+            <input type="text" id="cityInput" placeholder="Введите город (например, Астана)..." autocomplete="off">
+            <button id="searchBtn"><i class='bx bx-search'></i></button>
+            
+            <!-- Контейнер для выпадающего списка подсказок -->
+            <div id="suggestions" class="suggestions-list"></div>
+        </header>
+
+        <!-- Главный блок с текущей погодой -->
+        <main class="weather-main" id="weatherMain">
+            <div class="weather-info">
+                <h1 id="cityName">Город</h1>
+                <p id="weatherDesc">Выберите город или разрешите геолокацию</p>
+                <div class="temp-container">
+                    <span id="temperature">--</span><span class="unit">°C</span>
+                </div>
+            </div>
+            <div class="weather-icon-box">
+                <!-- Сюда будем динамически вставлять иконку погоды -->
+                <i class='bx bx-cloud-sun' id="mainIcon"></i>
+            </div>
+        </main>
+
+        <!-- Дополнительные параметры (Влажность, Ветер, Давление) -->
+        <section class="weather-details">
+            <div class="detail-card">
+                <i class='bx bx-water'></i>
+                <div>
+                    <p>Влажность</p>
+                    <span id="humidity">-- %</span>
+                </div>
+            </div>
+            <div class="detail-card">
+                <i class='bx bx-wind' ></i>
+                <div>
+                    <p>Ветер</p>
+                    <span id="windSpeed">-- км/ч</span>
+                </div>
+            </div>
+            <div class="detail-card">
+                <i class='bx bx-time' ></i>
+                <div>
+                    <p>Местное время</p>
+                    <span id="localTime">--:--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Блок с графиком прогноза -->
+        <section class="forecast-chart-box">
+            <h3>Прогноз изменения температуры</h3>
+            <div class="chart-wrapper">
+                <!-- Тег canvas обязателен для работы Chart.js -->
+                <canvas id="weatherChart"></canvas>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Подключение  библиотеку Chart.js для графиков перед нашим скриптом -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Подключаем нашу логику -->
+    <script src="app.js"></script>
+</body>
+</html>

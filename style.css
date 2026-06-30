@@ -1,0 +1,250 @@
+/* Обнуляем дефолтные отступы и настраиваем шрифты */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background: #1a1a2e; /* Стартовый глубокий темный цвет */
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Оверлей для динамического изменения фона (через JS будем менять картинки) */
+.bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: background-image 1s ease-in-out; /* Плавный переход фона */
+    z-index: -1;
+}
+
+/* Эффект размытия поверх картинки, чтобы текст оставался читаемым */
+.bg-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Затемнение */
+    backdrop-filter: blur(4px); /* Размытие заднего плана */
+}
+
+/* Главный контейнер дашборда (Матовое стекло) */
+.dashboard-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    padding: 30px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Панель поиска */
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+}
+
+.search-box input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 16px;
+}
+
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-box button, .search-box #geoBtn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.search-box button:hover, .search-box #geoBtn:hover {
+    transform: scale(1.1);
+    color: #00d2ff;
+}
+
+/* Главный блок погоды */
+.weather-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.weather-info h1 {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.weather-info p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    text-transform: capitalize;
+}
+
+.temp-container {
+    margin-top: 15px;
+}
+
+#temperature {
+    font-size: 64px;
+    font-weight: 700;
+}
+
+.unit {
+    font-size: 28px;
+    vertical-align: super;
+    color: #00d2ff;
+}
+
+/* Иконка погоды */
+.weather-icon-box i {
+    font-size: 90px;
+    color: #fff;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+}
+
+/* Карточки дополнительных параметров */
+.weather-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.detail-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.detail-card i {
+    font-size: 24px;
+    color: #00d2ff;
+}
+
+.detail-card p {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.detail-card span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Контейнер для графика Chart.js */
+.forecast-chart-box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.forecast-chart-box h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: 180px; /* Фиксируем высоту для графика */
+}
+
+/* Делаем родительский контейнер относительным, чтобы позиционировать список */
+.search-box {
+    position: relative; 
+}
+
+/* Стили для самого выпадающего списка */
+.suggestions-list {
+    position: absolute;
+    top: calc(100% + 8px); /* Появляется чуть ниже строки поиска */
+    left: 0;
+    width: 100%;
+    background: rgba(30, 30, 50, 0.95); /* Плотный темный фон для читаемости */
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    max-height: 220px;
+    overflow-y: auto; /* Если городов много, появится скролл */
+    z-index: 100;
+    display: none; /* Изначально скрыт */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Стили для каждой строчки с городом */
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+/* Эффект при наведении на вариант */
+.suggestion-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #00d2ff;
+}
+
+/* Адаптивность под мобилки */
+@media (max-width: 480px) {
+    .weather-details {
+        grid-template-columns: 1fr;
+    }
+    .weather-main {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    .weather-icon-box {
+        align-self: center;
+    }
+}
